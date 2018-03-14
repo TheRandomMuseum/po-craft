@@ -1,4 +1,5 @@
 import "../stylesheets/index.scss";
+import {launch} from "../../main";
 
 const canvas: HTMLCanvasElement = document.querySelector("#canvas");
 // Initialize the GL context
@@ -13,3 +14,5 @@ if (!gl) {
     // Clear the color buffer with specified clear color
     gl.clear(gl.COLOR_BUFFER_BIT);
 }
+
+launch(gl);

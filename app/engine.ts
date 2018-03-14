@@ -1,20 +1,35 @@
 import * as delay from "delay";
+import Game from "./game";
 
 declare const gl: WebGLRenderingContext;
 
 const TIMER_MS = 25;
+const TERRAIN_WIDTH = 100;
 
 export default class Engine {
     needDraw: boolean = true;
+    game: Game = new Game();
 
-    launch() {
-        this.init();
+    async launch() {
+        console.log("launching");
+        await this.init();
+        
         this.renderLoop();
     }
     
-    init() {
+    async init() {
         gl.enable(gl.DEPTH_TEST);
         gl.clearColor(0, 191/255, 1, 1);
+
+        // glEnable(GL_DEPTH_TEST);
+        // glEnable(GL_LIGHTING);
+        // glEnable(GL_LIGHT0);
+        // glEnable(GL_NORMALIZE);
+        // glEnable(GL_COLOR_MATERIAL);
+        // glClearColor(0, 191.f/255, 1.f, 1.f);
+        // glShadeModel(GL_SMOOTH);
+
+        await this.game.loadTerrain("images/maps/heightmap.png", 15, TERRAIN_WIDTH)
     }
 
     async renderLoop() {

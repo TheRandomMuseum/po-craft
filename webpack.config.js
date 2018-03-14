@@ -1,5 +1,6 @@
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const webpack = require("webpack");
 const path = require("path");
 
@@ -60,6 +61,12 @@ module.exports = {
     ]
   },
   plugins: [
+    new CopyPlugin([
+        {
+            from: "images/maps/heightmap.png",
+            to: "images/maps"
+        }
+    ]),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',

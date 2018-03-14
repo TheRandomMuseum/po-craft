@@ -1,0 +1,37 @@
+{
+  "name": "po-craft",
+  "version": "0.1.0",
+  "description": "Penguins overlords in the browser",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "webpack-cli",
+    "watch-front": "webpack-cli --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheRandomMuseum/po-craft.git"
+  },
+  "author": "coyotte508 <coyotte508@gmail.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/TheRandomMuseum/po-craft/issues"
+  },
+  "homepage": "https://github.com/TheRandomMuseum/po-craft#readme",
+  "devDependencies": {
+    "css-loader": "^0.28.10",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.0.6",
+    "node-sass": "^4.7.2",
+    "resolve-url-loader": "^2.3.0",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.3",
+    "ts-loader": "^4.0.1",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12"
+  }
+}

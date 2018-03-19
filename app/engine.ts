@@ -42,7 +42,6 @@ export default class Engine {
     }
 
     drawScene() {
-        this.graphics.clear();
         this.graphics.draw();
     }
 

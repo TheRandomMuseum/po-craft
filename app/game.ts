@@ -8,10 +8,17 @@ export default class Game {
     cube: THREE.Mesh;
 
     constructor(public graphics: Graphics){
-        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        var geometry = new THREE.BoxGeometry( 0.4, 0.4, 0.4 );
+        var material = new THREE.MeshStandardMaterial( { color: 0xccff99 } );
         this.cube = new THREE.Mesh( geometry, material );
         graphics.scene.add( this.cube );
+
+        const ambientLight = new THREE.AmbientLight(new THREE.Color(0.4,0.4,0.4));
+        graphics.scene.add(ambientLight);
+
+        const pointLight = new THREE.PointLight(new THREE.Color(0.6,0.6,0.6));
+        pointLight.position.set(-0.5, 0.8, 0.1);
+        graphics.scene.add(pointLight);
     }
 
     async loadTerrain(path: string, height: number, length: number) {
@@ -32,14 +39,6 @@ export default class Game {
         } else if (this.cameraMode == CameraMode.BehindCharacter) {
             // camera.projectBehind(ball);
         }
-    
-        // GLfloat ambientColor[] = {0.4f, 0.4f, 0.4f, 1.0f};
-        // glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-    
-        // GLfloat lightColor0[] = {0.6f, 0.6f, 0.6f, 1.0f};
-        // GLfloat lightPos0[] = {-0.5f, 0.8f, 0.1f, 0.0f};
-        // glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
-        // glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
     
         this.terrain.draw();
     

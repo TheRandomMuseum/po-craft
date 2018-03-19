@@ -1,9 +1,7 @@
 import * as delay from "delay";
 import Engine from "./engine";
 
-export async function launch(gl: WebGLRenderingContext) {
-    (window as any).gl = gl;
-
+export async function launch() {
     await delay(1);
 
     const engine = new Engine();

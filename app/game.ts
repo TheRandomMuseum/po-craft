@@ -2,8 +2,6 @@ import Terrain from "./terrain";
 import Camera from "./camera";
 import {CameraMode, Dir} from "./enums";
 
-declare const gl: WebGLRenderingContext;
-
 export default class Game {
     constructor(){
 

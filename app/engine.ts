@@ -2,8 +2,6 @@ import * as delay from "delay";
 import Game from "./game";
 import Graphics from "./graphics";
 
-declare const gl: WebGLRenderingContext;
-
 const TIMER_MS = 25;
 const TERRAIN_WIDTH = 100;
 
@@ -44,7 +42,7 @@ export default class Engine {
 
     drawScene() {
         this.graphics.clear();
-        this.game.draw();
+        this.graphics.draw();
     }
 
     async waitForTimers() {

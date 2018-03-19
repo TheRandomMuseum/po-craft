@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/TheRandomMuseum/po-craft#readme",
   "devDependencies": {
+    "@types/three": "^0.89.12",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.10",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
@@ -36,6 +37,7 @@
     "webpack-cli": "^2.0.12"
   },
   "dependencies": {
-    "delay": "^2.0.0"
+    "delay": "^2.0.0",
+    "three": "^0.91.0"
   }
 }

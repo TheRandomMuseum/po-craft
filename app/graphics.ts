@@ -1,9 +1,30 @@
-declare const gl: WebGLRenderingContext;
+import * as THREE from "three";
 
 export default class Graphics {
+    scene: THREE.Scene;
+    camera: THREE.PerspectiveCamera;
+    renderer: THREE.WebGLRenderer;
+
     constructor() {
-        gl.enable(gl.DEPTH_TEST);
-        gl.clearColor(0, 191/255, 1, 1);
+        // gl.enable(gl.DEPTH_TEST);
+        // gl.clearColor(0, 191/255, 1, 1);
+
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
+        this.renderer = new THREE.WebGLRenderer();
+
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(this.renderer.domElement);
+
+        window.onresize = event => {
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
+        }
+
+        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        var cube = new THREE.Mesh( geometry, material );
+        this.scene.add( cube );
 
         // glEnable(GL_DEPTH_TEST);
         // glEnable(GL_LIGHTING);
@@ -17,6 +38,11 @@ export default class Graphics {
     }
 
     clear() {
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    }
+
+    draw() {
+        this.camera.position.z = 5;
+        this.renderer.render(this.scene, this.camera);
     }
 }

@@ -1,7 +1,5 @@
 import Vec3f from "./vec3f";
 
-declare const gl: WebGLRenderingContext;
-
 export default class Terrain {
     constructor(width, length) {
         this.w = width;

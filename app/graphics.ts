@@ -18,7 +18,8 @@ export default class Graphics {
 
         window.onresize = event => {
             this.renderer.setSize(window.innerWidth, window.innerHeight);
-            this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
         }
 
         // glEnable(GL_DEPTH_TEST);

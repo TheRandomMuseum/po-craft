@@ -156,21 +156,21 @@ export default class Terrain {
 
     draw() {
         //glPushMatrix();
-        gl.disable(gl.TEXTURE_2D);
+        // gl.disable(gl.TEXTURE_2D);
         // glColor3f(0.3f, 0.9f, 0.0f);
         // glScalef(scale, scale, scale);
-        for(let z = 0; z < this.rawLength - 1; z++) {
+        // for(let z = 0; z < this.rawLength - 1; z++) {
             // glBegin(GL_TRIANGLE_STRIP);
-            for(let x = 0; x < this.rawWidth; x++) {
-                let normal: Vec3f = this.getNormal(x, z);
+            // for(let x = 0; x < this.rawWidth; x++) {
+                // let normal: Vec3f = this.getNormal(x, z);
                 // glNormal3f(normal.x, normal.y, normal.z);
                 // glVertex3f(x, this.getHeight(x, z), z);
-                normal = this.getNormal(x, z + 1);
+                // normal = this.getNormal(x, z + 1);
                 // glNormal3f(normal.x, normal.y, normal.z);
                 // glVertex3f(x, this.getHeight(x, z + 1), z + 1);
-            }
+            // }
             // glEnd();
-        }
+        // }
     // #if 0
     //     /* Wireframe mode */
     //     glDisable(GL_LIGHTING);

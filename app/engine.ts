@@ -1,5 +1,6 @@
 import * as delay from "delay";
 import Game from "./game";
+import Graphics from "./graphics";
 
 declare const gl: WebGLRenderingContext;
 
@@ -9,27 +10,16 @@ const TERRAIN_WIDTH = 100;
 export default class Engine {
     needDraw: boolean = true;
     game: Game = new Game();
+    graphics: Graphics = null;
 
     async launch() {
-        console.log("launching");
         await this.init();
         
         this.renderLoop();
     }
     
     async init() {
-        gl.enable(gl.DEPTH_TEST);
-        gl.clearColor(0, 191/255, 1, 1);
-
-        // glEnable(GL_DEPTH_TEST);
-        // glEnable(GL_LIGHTING);
-        // glEnable(GL_LIGHT0);
-        // glEnable(GL_NORMALIZE);
-        // glEnable(GL_COLOR_MATERIAL);
-        // glClearColor(0, 191.f/255, 1.f, 1.f);
-        // glShadeModel(GL_SMOOTH);
-
-        await this.game.loadTerrain("images/maps/heightmap.png", 15, TERRAIN_WIDTH)
+        this.graphics = new Graphics();
     }
 
     async renderLoop() {
@@ -53,15 +43,8 @@ export default class Engine {
     }
 
     drawScene() {
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        
-        // gb->game.draw();
-        // gb->window.pushGLStates();
-        // if (gb->menu.running()) {
-        //     gb->menu.draw();
-        // }
-        // gb->window.popGLStates();
-        // gb->window.display();
+        this.graphics.clear();
+        this.game.draw();
     }
 
     async waitForTimers() {
@@ -78,11 +61,17 @@ export default class Engine {
 
     addTimer(delay: number, funct: (delta: number) => any) {
         const now = Date.now();
-        this.timers.push({
+        const timer = {
             timeStarted: now,
             timeExpected: now + delay,
             function: funct
-        });
+        };
+
+        for (let i = this.timers.length; i >= 0; i--) {
+            if (i == 0 || this.timers[i-1].timeExpected <= timer.timeExpected) {
+                this.timers.splice(i, 0, timer);
+            }
+        }
     }
 
     dealWithTimers() {

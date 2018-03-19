@@ -7,7 +7,7 @@ const TERRAIN_WIDTH = 100;
 
 export default class Engine {
     needDraw: boolean = true;
-    game: Game = new Game();
+    game: Game = null;
     graphics: Graphics = null;
 
     async launch() {
@@ -18,10 +18,11 @@ export default class Engine {
     
     async init() {
         this.graphics = new Graphics();
+        this.game = new Game(this.graphics);
     }
 
     async renderLoop() {
-        this.addTimer(TIMER_MS, () => this.update());
+        this.addTimer(TIMER_MS, (delta) => this.update(delta));
         this.drawScene();
 
         while (1) {
@@ -34,10 +35,10 @@ export default class Engine {
         }
     }
 
-    update() {
-        // gb->game.update(time);
+    update(delta: number) {
+        this.game.update(delta);
         this.needDraw = true;
-        this.addTimer(TIMER_MS, () => this.update());
+        this.addTimer(TIMER_MS, (delta) => this.update(delta));
     }
 
     drawScene() {

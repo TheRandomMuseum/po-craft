@@ -1,10 +1,17 @@
 import Terrain from "./terrain";
 import Camera from "./camera";
 import {CameraMode, Dir} from "./enums";
+import Graphics from "./graphics";
+import * as THREE from "three";
 
 export default class Game {
-    constructor(){
+    cube: THREE.Mesh;
 
+    constructor(public graphics: Graphics){
+        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        this.cube = new THREE.Mesh( geometry, material );
+        graphics.scene.add( this.cube );
     }
 
     async loadTerrain(path: string, height: number, length: number) {
@@ -39,6 +46,11 @@ export default class Game {
         if (this.cameraMode != CameraMode.OnCharacter) {
             // ball.draw();
         }
+    }
+
+    update(time: number) {
+        this.cube.rotation.x += 0.0007*time;
+        this.cube.rotation.y += 0.0007*time;
     }
 
     xDir = 0;

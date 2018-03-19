@@ -21,11 +21,6 @@ export default class Graphics {
             this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
         }
 
-        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-        var cube = new THREE.Mesh( geometry, material );
-        this.scene.add( cube );
-
         // glEnable(GL_DEPTH_TEST);
         // glEnable(GL_LIGHTING);
         // glEnable(GL_LIGHT0);

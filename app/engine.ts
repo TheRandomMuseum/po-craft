@@ -3,7 +3,6 @@ import Game from "./game";
 import Graphics from "./graphics";
 
 const TIMER_MS = 25;
-const TERRAIN_WIDTH = 100;
 
 export default class Engine {
     needDraw: boolean = true;
@@ -20,7 +19,7 @@ export default class Engine {
         this.graphics = new Graphics();
         this.game = new Game(this.graphics);
 
-        await this.game.loadTerrain("images/maps/heightmap.png", 15, TERRAIN_WIDTH);
+        await this.game.init();
     }
 
     async renderLoop() {

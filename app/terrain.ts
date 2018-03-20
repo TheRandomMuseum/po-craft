@@ -1,4 +1,3 @@
-import Vec3f from "./vec3f";
 import { Geometry, Vector3, Face3 } from "three";
 import * as THREE from "three";
 
@@ -32,7 +31,7 @@ export default class Terrain extends Geometry {
                 height /= terrain.aspect;
 
                 const canvas = document.createElement("canvas");
-                
+
                 canvas.width = image.width;
                 canvas.height = image.height;
                 
@@ -99,12 +98,12 @@ export default class Terrain extends Geometry {
         this.heights[this.offset(x, z)] = y;
     }
 
-    getHeight(x: number, z: number) {
-        return this.heights[this.offset(x, z)];
+    getHeight(rawX: number, rawZ: number) {
+        return this.heights[this.offset(rawX, rawZ)];
     }
 
-    offset(x: number, z: number) {
-        return z * this.rawWidth + x;
+    offset(rawX: number, rawZ: number) {
+        return rawZ * this.rawWidth + rawX;
     }
 
     get width() {
@@ -123,10 +122,64 @@ export default class Terrain extends Geometry {
         return this.l;
     }
 
+    heightAt(x: number, z: number) {
+        x = Math.max(Math.min(x/this.aspect, this.rawWidth-1), 0);
+        z = Math.max(Math.min(z/this.aspect, this.rawLength-1), 0);
+
+        // We find the square containing x/z:
+        const xTrunc = Math.min(Math.floor(x), this.rawWidth-1);
+        const zTrunc = Math.min(Math.floor(z), this.rawLength-1);
+
+        // We find which of the two triangles contains x/z
+        const [xFrac, zFrac, xCeil, zCeil] = [x-xTrunc, z-zTrunc, xTrunc+1, zTrunc+1];
+        const face = this.faces[this.faceOffset(xTrunc, zTrunc, xFrac+zFrac > 1)];
+
+        /* First we check if the point is in the first triangle
+            or the second triangle. This is done by fracX + fracZ
+            being more or less than 1.
+
+            Then we get the plane equation corresponding to the triangle,
+            and use it to get the y coordinate of the point knowing x and z */
+        // TODO: Check equations
+        let normal: Vector3;
+        let plane: number;
+        if (xFrac + zFrac <= 1) {
+            const mh = this.getHeight(xTrunc, zTrunc);
+
+            normal = new Vector3(1, this.getHeight(xCeil, zTrunc) - mh, 0).cross(new Vector3(0, this.getHeight(xTrunc, zCeil)-mh, 1));
+            plane = normal.dot(new Vector3(xTrunc, mh, zTrunc));
+        } else {
+            const mh = this.getHeight(xCeil, zCeil);
+            
+            normal = new Vector3(1, mh - this.getHeight(xTrunc, zCeil), 0).cross(new Vector3(0, mh - this.getHeight(xCeil, zTrunc), 1));
+            plane = -normal.dot(new Vector3(xCeil, mh, zCeil));
+        }
+
+        return (-normal.x*x-normal.z*z-plane)/normal.y*this.aspect;
+    }
+
+    faceAt(x: number, z: number) : Face3 {
+        x = Math.max(Math.min(x/this.aspect, this.rawWidth-1), 0);
+        z = Math.max(Math.min(z/this.aspect, this.rawLength-1), 0);
+
+        // We find the square containing x/z:
+        const xTrunc = Math.min(Math.floor(x), this.rawWidth-1);
+        const zTrunc = Math.min(Math.floor(z), this.rawLength-1);
+
+        // We find which of the two triangles contains x/z
+        const [xFrac, zFrac] = [x-xTrunc, z-zTrunc];
+
+        return this.faces[this.faceOffset(x, z, xFrac + zFrac > 1)];
+    }
+
+    faceOffset(rawX: number, rawZ: number, secondTriangle: boolean): number {
+        return this.offset(rawX, rawZ) * 2 + (secondTriangle ? 1 : 0);
+    }
+
     w: number;
     l: number;
     heights: number[] = [];
     aspect: number = 1;
-    scaledWidth: number;
-    scaledLength: number;
+    private scaledWidth: number;
+    private scaledLength: number;
 }

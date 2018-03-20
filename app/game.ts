@@ -1,5 +1,6 @@
 import Terrain from "./terrain";
 import Camera from "./camera";
+import Ball from "./ball";
 import {CameraMode, Dir} from "./enums";
 import Graphics from "./graphics";
 import * as THREE from "three";
@@ -30,6 +31,8 @@ export default class Game {
         const pointLight = new THREE.DirectionalLight(new THREE.Color(0.6,0.6,0.6));
         pointLight.position.set(-0.5, 0.8, 0.1);
         graphics.scene.add(pointLight);
+
+        graphics.scene.add(this.ball);
     }
 
     async init() {
@@ -42,6 +45,8 @@ export default class Game {
         const object = new THREE.Mesh(this.terrain, material);
         object.matrixAutoUpdate = false;
         this.graphics.scene.add(object);
+
+        this.ball.setTerrain(this.terrain);
 
         console.log("terrain loaded");
     }
@@ -69,7 +74,7 @@ export default class Game {
         this.cube.rotation.y += 0.0007*time;
 
         this.graphics.camera.position.set(20,100,20);
-        this.graphics.camera.lookAt(this.terrain.scaledWidth/2,0,this.terrain.scaledLength/2);
+        this.graphics.camera.lookAt(this.terrain.width/2,0,this.terrain.length/2);
     }
 
     xDir = 0;
@@ -79,5 +84,6 @@ export default class Game {
     cameraRotateDirectionY: Dir = Dir.Center;
     cameraZoomDirection: Dir = Dir.Center;
     terrain: Terrain;
+    ball: Ball = new Ball(0.4);
     camera = new Camera();
 }

@@ -25,8 +25,6 @@ export default class Graphics {
         this.renderer.setClearColor(new THREE.Color(0, 191/255, 1));
 
         // glShadeModel(GL_SMOOTH);
-
-        // await this.game.loadTerrain("images/maps/heightmap.png", 15, TERRAIN_WIDTH)
     }
 
     draw() {

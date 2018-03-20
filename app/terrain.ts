@@ -1,7 +1,11 @@
 import Vec3f from "./vec3f";
+import { Geometry, Vector3, Face3 } from "three";
+import * as THREE from "three";
 
-export default class Terrain {
+export default class Terrain extends Geometry {
     constructor(width, length) {
+        super();
+
         this.w = width;
         this.l = length;
 
@@ -23,10 +27,10 @@ export default class Terrain {
                 console.log("onload");
                 const terrain = new Terrain(image.width, image.height);
 
-                terrain.scale = length / (terrain.rawWidth - 1);
-                terrain.scaledWidth = (terrain.rawWidth - 1) * terrain.scale;
-                terrain.scaledLength = (terrain.rawLength - 1) * terrain.scale;
-                height /= terrain.scale;
+                terrain.aspect = length / (terrain.rawWidth - 1);
+                terrain.scaledWidth = (terrain.rawWidth - 1) * terrain.aspect;
+                terrain.scaledLength = (terrain.rawLength - 1) * terrain.aspect;
+                height /= terrain.aspect;
 
                 const canvas = document.createElement("canvas");
 
@@ -47,7 +51,11 @@ export default class Terrain {
 
                 console.log("heights set");
 
-                terrain.computeNormals();
+                terrain.generateVertices();
+                terrain.generateFaces();
+
+                terrain.computeVertexNormals();
+                terrain.computeFaceNormals();
 
                 console.log("normals computed");
 
@@ -63,129 +71,24 @@ export default class Terrain {
         });  
     }
 
-    computeNormals() {
-        if (this.normalsComputed) {
-            return;
-        }
-    
-        //Compute the rough version of the normals
-        const normals: Vec3f[] = [];
-        this.normals = [];
-    
-        for(let z = 0; z < this.rawLength; z++) {
-            for(let x = 0; x < this.rawWidth; x++) {
-                const sum: Vec3f = new Vec3f(0,0,0);
-    
-                let out : Vec3f;
-                let inside : Vec3f;
-                let left : Vec3f;
-                let right: Vec3f;
-
-                if (z > 0) {
-                    out = new Vec3f(0, this.getHeight(x, z-1) - this.getHeight(x, z), -1.0);
-                } else {
-                    out = new Vec3f();
-                }
-
-                if (z < this.rawLength - 1) {
-                    inside = new Vec3f(0, this.getHeight(x, z+1) - this.getHeight(x, z), 1);
-                } else {
-                    inside = new Vec3f();
-                }
-
-                if (x > 0) {
-                    left = new Vec3f(-1, this.getHeight(x-1, z) - this.getHeight(x, z), 0);
-                } else {
-                    left = new Vec3f();
-                }
-
-                if (x < this.rawWidth - 1) {
-                    right = new Vec3f(1, this.getHeight(x+1, z) - this.getHeight(x, z), 0);
-                } else {
-                    right = new Vec3f();
-                }
-    
-                if (x > 0 && z > 0) {
-                    sum.add(out.cross(left).normalize());
-                }
-                if (x > 0 && z < this.rawLength - 1) {
-                    sum.add(left.cross(inside).normalize());
-                }
-                if (x < this.rawWidth - 1 && z < this.rawLength - 1) {
-                    sum.add(inside.cross(right).normalize());
-                }
-                if (x < this.rawWidth - 1 && z > 0) {
-                    sum.add(right.cross(out).normalize());
-                }
-    
-                normals.push(sum);
+    generateVertices() {
+        for (let z = 0; z < this.rawLength; z++) {
+            for (let x = 0; x < this.rawWidth; x++) {
+                this.vertices.push(new Vector3(x, this.getHeight(x, z), z));
             }
         }
-    
-        //Smooth out the normals
-        const FALLOUT_RATIO = 0.5;
-        for(let z = 0; z < this.rawLength; z++) {
-            for(let x = 0; x < this.rawWidth; x++) {
-                let sum = normals[this.offset(x, z)];
-    
-                if (x > 0) {
-                    sum.add(normals[this.offset(x-1, z)].multiplyTo(FALLOUT_RATIO));
-                }
-                if (x < this.rawWidth-1) {
-                    sum.add(normals[this.offset(x+1, z)].multiplyTo(FALLOUT_RATIO));
-                }
-                if (z > 0) {
-                    sum.add(normals[this.offset(x, z-1)].multiplyTo(FALLOUT_RATIO));
-                }
-                if (z < this.rawLength - 1) {
-                    sum.add(normals[this.offset(x, z+1)].multiplyTo(FALLOUT_RATIO));
-                }
-    
-                if (sum.magnitude() == 0) {
-                    sum = new Vec3f(0, 1, 0);
-                }
-
-                this.normals.push(sum);
-            }
-        }
-
-        this.normalsComputed = true;
     }
 
-    draw() {
-        //glPushMatrix();
-        // gl.disable(gl.TEXTURE_2D);
-        // glColor3f(0.3f, 0.9f, 0.0f);
-        // glScalef(scale, scale, scale);
-        // for(let z = 0; z < this.rawLength - 1; z++) {
-            // glBegin(GL_TRIANGLE_STRIP);
-            // for(let x = 0; x < this.rawWidth; x++) {
-                // let normal: Vec3f = this.getNormal(x, z);
-                // glNormal3f(normal.x, normal.y, normal.z);
-                // glVertex3f(x, this.getHeight(x, z), z);
-                // normal = this.getNormal(x, z + 1);
-                // glNormal3f(normal.x, normal.y, normal.z);
-                // glVertex3f(x, this.getHeight(x, z + 1), z + 1);
-            // }
-            // glEnd();
-        // }
-    // #if 0
-    //     /* Wireframe mode */
-    //     glDisable(GL_LIGHTING);
-    //     glColor3f(1.f, 1.f, 1.f);
-    //     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    //     for(int z = 0; z < rawLength() - 1; z++) {
-    //         glBegin(GL_TRIANGLE_STRIP);
-    //         for(int x = 0; x < rawWidth(); x++) {
-    //             glVertex3f(x, getHeight(x, z)+.1, z);
-    //             glVertex3f(x, getHeight(x, z + 1)+.1, z + 1);
-    //         }
-    //         glEnd();
-    //     }
-    //     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    //     glEnable(GL_LIGHTING);
-    // #endif
-        // glPopMatrix();
+    generateFaces() {
+        for (let z = 0; z < this.rawLength - 1; z++) {
+            for (let x = 0; x < this.rawWidth - 1; x ++) {
+                // We need to get the index of the vertices
+                // Two faces, to make a square: ((x,z), (x+1, z), (x, z+1))
+                // and: ((x+1,z+1), (x+1, z), (x, z+1))
+                const face1 = new Face3(this.offset(x, z), this.offset(x+1, z), this.offset(x, z+1));
+                const face2 = new Face3(this.offset(x+1, z+1), this.offset(x+1, z), this.offset(x, z+1));
+            }
+        }
     }
 
     setHeight(x: number, z: number, y: number) {
@@ -226,7 +129,7 @@ export default class Terrain {
     heights: number[] = [];
     normals: Vec3f[] = [];
     normalsComputed: boolean = false;
-    scale: number = 1;
+    aspect: number = 1;
     scaledWidth: number;
     scaledLength: number;
 }

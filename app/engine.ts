@@ -19,6 +19,8 @@ export default class Engine {
     async init() {
         this.graphics = new Graphics();
         this.game = new Game(this.graphics);
+
+        await this.game.loadTerrain("images/maps/heightmap.png", 15, TERRAIN_WIDTH);
     }
 
     async renderLoop() {

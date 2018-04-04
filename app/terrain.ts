@@ -16,7 +16,7 @@ export default class Terrain extends Geometry {
         }
     }
 
-    static async load(path: string, height: number, side: number): Promise<Terrain> {
+    static async load(path: string, scaledHeight: number, side: number): Promise<Terrain> {
         const image = new Image();
         image.src = path;
 
@@ -28,7 +28,6 @@ export default class Terrain extends Geometry {
                 terrain.aspect = side / (terrain.rawWidth - 1);
                 terrain.scaledWidth = (terrain.rawWidth - 1) * terrain.aspect;
                 terrain.scaledLength = (terrain.rawLength - 1) * terrain.aspect;
-                height /= terrain.aspect;
 
                 const canvas = document.createElement("canvas");
 
@@ -43,7 +42,7 @@ export default class Terrain extends Geometry {
                 for (let y = 0; y < image.height; y++) {
                     for (let x = 0; x < image.width; x++) {
                         const color = imageData.data[(y * image.width + x) * 4];
-                        const h = height * (color/255 - 0.5);
+                        const h = scaledHeight * (color/255 - 0.5);
                         terrain.setHeight(x, y, h);
                     }
                 }

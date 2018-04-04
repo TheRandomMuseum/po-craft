@@ -13,7 +13,7 @@ export default class Camera extends THREE.PerspectiveCamera {
         this.lookAt(0,0,0);
 
         window.addEventListener("mousemove", event => this.handleMouseMove(event.movementX, event.movementY));
-        window.addEventListener("wheel", event => this.handleMouseScroll(event.deltaY));
+        window.addEventListener("wheel", event => this.handleMouseScroll(event.deltaY/2));
     }
 
     update(time) {
@@ -34,15 +34,14 @@ export default class Camera extends THREE.PerspectiveCamera {
     }
 
     study(point: Vector3) {
-        const x = point.x - this._zoom * Math.cos(this.angleX * TO_RAD) * Math.cos(this.angleY * TO_RAD);
+        const x = point.x + this._zoom * Math.cos(this.angleX * TO_RAD) * Math.cos(this.angleY * TO_RAD);
         const y = point.y + this._zoom * Math.sin(this.angleY * TO_RAD);
-        const z = point.z + this._zoom * Math.sin(this.angleX * TO_RAD) * Math.cos(this.angleY * TO_RAD);
+        const z = point.z - this._zoom * Math.sin(this.angleX * TO_RAD) * Math.cos(this.angleY * TO_RAD);
         this.position.set(x, y, z);
-        console.log(this.angleX, this.angleY, this._zoom);
         this.lookAt(point);
     }
     
     angleX = 135;
-    angleY = 144;
-    _zoom = 12;
+    angleY = 20;
+    _zoom = 10;
 }

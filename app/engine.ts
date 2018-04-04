@@ -43,6 +43,7 @@ export default class Engine {
     }
 
     drawScene() {
+        this.game.draw();
         this.graphics.draw();
     }
 

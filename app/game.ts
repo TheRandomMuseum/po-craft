@@ -41,9 +41,11 @@ export default class Game {
 
         if (this.cameraMode == CameraMode.OnTerrain) {
             // this.camera.project(this.terrain);
+            this.graphics.camera.study(new Vector3(this.terrain.width/2, this.terrain.heightAt(this.terrain.width/2, this.terrain.length/2), this.terrain.length/2));
         } else if (this.cameraMode == CameraMode.OnCharacter){
             // camera.project(ball);
         } else if (this.cameraMode == CameraMode.BehindCharacter) {
+            this.graphics.camera.study(this.ball.position);
             // camera.projectBehind(ball);
         }
     

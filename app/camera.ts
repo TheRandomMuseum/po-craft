@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import Terrain from "./terrain";
+import { Geometry, Vector3 } from "three";
 declare const gl: WebGLRenderingContext;
+
+const TO_RAD = Math.PI / 180;
 
 export default class Camera extends THREE.PerspectiveCamera {
     constructor() {
@@ -29,8 +32,17 @@ export default class Camera extends THREE.PerspectiveCamera {
 
         this._zoom = Math.max(Math.min(this._zoom, 50), 2);
     }
+
+    study(point: Vector3) {
+        const x = point.x - this._zoom * Math.cos(this.angleX * TO_RAD) * Math.cos(this.angleY * TO_RAD);
+        const y = point.y + this._zoom * Math.sin(this.angleY * TO_RAD);
+        const z = point.z + this._zoom * Math.sin(this.angleX * TO_RAD) * Math.cos(this.angleY * TO_RAD);
+        this.position.set(x, y, z);
+        console.log(this.angleX, this.angleY, this._zoom);
+        this.lookAt(point);
+    }
     
-    angleX = 10;
-    angleY = 135;
+    angleX = 135;
+    angleY = 144;
     _zoom = 12;
 }

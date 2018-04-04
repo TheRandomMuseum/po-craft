@@ -1,8 +1,9 @@
 import * as THREE from "three";
+import Camera from "./camera";
 
 export default class Graphics {
     scene: THREE.Scene;
-    camera: THREE.PerspectiveCamera;
+    camera: Camera;
     renderer: THREE.WebGLRenderer;
 
     constructor() {
@@ -10,7 +11,7 @@ export default class Graphics {
         // gl.clearColor(0, 191/255, 1, 1);
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
+        this.camera = new Camera();
         this.renderer = new THREE.WebGLRenderer();
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -28,7 +29,6 @@ export default class Graphics {
     }
 
     draw() {
-        this.camera.position.z = 5;
         this.renderer.render(this.scene, this.camera);
     }
 }

@@ -7,24 +7,7 @@ import * as THREE from "three";
 import { Geometry, Vector3, Face3 } from "three";
 
 export default class Game {
-    cube: THREE.Mesh;
-
     constructor(public graphics: Graphics){
-        var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        // var geometry = new Geometry();
-        // geometry.vertices.push(
-        //     new Vector3(0, 0, 0),
-        //     new Vector3(0, 0, 1),
-        //     new Vector3(1, 0, 0),
-        // );
-        // geometry.faces.push(new Face3(0, 1, 2));
-        // geometry.computeFaceNormals();
-        // geometry.computeVertexNormals();
-
-        var material = new THREE.MeshStandardMaterial( { color: 0xccff99 } );
-        this.cube = new THREE.Mesh( geometry, material );
-        // graphics.scene.add( this.cube );
-
         const ambientLight = new THREE.AmbientLight(new THREE.Color(0.4,0.4,0.4));
         graphics.scene.add(ambientLight);
 
@@ -57,7 +40,7 @@ export default class Game {
         }
 
         if (this.cameraMode == CameraMode.OnTerrain) {
-            this.camera.project(this.terrain);
+            // this.camera.project(this.terrain);
         } else if (this.cameraMode == CameraMode.OnCharacter){
             // camera.project(ball);
         } else if (this.cameraMode == CameraMode.BehindCharacter) {
@@ -70,11 +53,7 @@ export default class Game {
     }
 
     update(time: number) {
-        this.cube.rotation.x += 0.0007*time;
-        this.cube.rotation.y += 0.0007*time;
-
-        this.graphics.camera.position.set(-40,2,-40);
-        this.graphics.camera.lookAt(0,0,0);
+        this.graphics.camera.update(time);
     }
 
     xDir = 0;

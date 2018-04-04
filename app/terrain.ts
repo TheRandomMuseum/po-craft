@@ -126,6 +126,8 @@ export default class Terrain extends Geometry {
         x = Math.max(Math.min(x/this.aspect, this.rawWidth-1), 0);
         z = Math.max(Math.min(z/this.aspect, this.rawLength-1), 0);
 
+        // debugger;
+
         // We find the square containing x/z:
         const xTrunc = Math.min(Math.floor(x), this.rawWidth-1);
         const zTrunc = Math.min(Math.floor(z), this.rawLength-1);
@@ -155,7 +157,7 @@ export default class Terrain extends Geometry {
             plane = -normal.dot(new Vector3(xCeil, mh, zCeil));
         }
 
-        return (-normal.x*x-normal.z*z-plane)/normal.y*this.aspect;
+        return (-normal.x*x-normal.z*z-plane)/normal.y;
     }
 
     faceAt(x: number, z: number) : Face3 {

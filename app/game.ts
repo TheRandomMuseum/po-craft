@@ -73,8 +73,8 @@ export default class Game {
         this.cube.rotation.x += 0.0007*time;
         this.cube.rotation.y += 0.0007*time;
 
-        this.graphics.camera.position.set(20,100,20);
-        this.graphics.camera.lookAt(this.terrain.width/2,0,this.terrain.length/2);
+        this.graphics.camera.position.set(-40,2,-40);
+        this.graphics.camera.lookAt(0,0,0);
     }
 
     xDir = 0;
